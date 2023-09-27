@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TaskType } from "./types";
+import { Category, TaskType } from "./types";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import { instance } from "../../http/config";
@@ -64,16 +64,34 @@ export default function TodoList() {
 
   useEffect(() => {
     getTasks();
+    getCategories();
   }, []);
+
+  // optional task: add a dropdown to select category for each todo
+  const [categories, setCategories] = useState<Category[]>();
+
+  const getCategories = async () => {
+    try {
+      const { data } = await instance.get("/category");
+
+      setCategories(data);
+    } catch (e) {
+      console.error("[*] getCategories Error:", e);
+    }
+  };
 
   return (
     <div>
       <TaskForm addTask={addTask} />
-      <FilterCategory setFilterCategory={setFilterCategory} />
+      <FilterCategory
+        categories={categories}
+        setFilterCategory={setFilterCategory}
+      />
       {isLoading ? (
         "Loading"
       ) : (
         <TaskList
+          categories={categories}
           tasks={tasks}
           updateTask={updateTask}
           deleteTask={deleteTask}

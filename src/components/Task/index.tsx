@@ -1,13 +1,29 @@
 import React, { useState } from "react";
-import { TaskComponentProps, TaskType } from "../../app/TodoList/types";
+import {
+  Category,
+  TaskComponentProps,
+  TaskType,
+} from "../../app/TodoList/types";
 import styles from "./Task.module.scss";
 
 interface TaskProps extends TaskComponentProps {
   task: TaskType;
+  categories: Category[] | undefined;
 }
 
-export default function Task({ task, updateTask, deleteTask }: TaskProps) {
+export default function Task({
+  task,
+  updateTask,
+  deleteTask,
+  categories,
+}: TaskProps) {
   const [currentTask, setCurrentTask] = useState<TaskType>(task);
+
+  const updateCurrentTask = (payload: TaskType) => {
+    setCurrentTask(payload);
+
+    updateTask(payload);
+  };
 
   const completeTask = (value: boolean) => {
     const newTask = {
@@ -15,7 +31,14 @@ export default function Task({ task, updateTask, deleteTask }: TaskProps) {
       completed: value,
     };
 
-    setCurrentTask(newTask);
+    updateTask(newTask);
+  };
+
+  const changeCategory = (value: string) => {
+    const newTask = {
+      ...currentTask,
+      categoryId: value,
+    };
 
     updateTask(newTask);
   };
@@ -32,10 +55,24 @@ export default function Task({ task, updateTask, deleteTask }: TaskProps) {
           type="checkbox"
           checked={currentTask.completed}
           onChange={(e) => completeTask(e.target.checked)}
-        />
+        />{" "}
         <h1>
           {currentTask.name} ({currentTask.category})
         </h1>
+      </div>
+      <div>
+        <select
+          name="categories"
+          id="categories"
+          onChange={(e) => changeCategory(e.target.value)}
+          value={currentTask.categoryId || "None"}
+        >
+          {categories?.map((i: Category) => (
+            <option value={i.id} key={i.id}>
+              {i.name}
+            </option>
+          ))}
+        </select>
       </div>
       <div>
         <button onClick={() => deleteTask(currentTask)}>Delete</button>

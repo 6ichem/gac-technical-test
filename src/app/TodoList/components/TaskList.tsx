@@ -1,10 +1,11 @@
 import React, { Fragment } from "react";
-import { TaskComponentProps, TaskType } from "../types";
+import { Category, TaskComponentProps, TaskType } from "../types";
 import Task from "../../../components/Task";
 
 interface TaskListProps extends TaskComponentProps {
   tasks: TaskType[];
   filterCategory: string | undefined;
+  categories: Category[] | undefined;
 }
 
 export default function TaskList({
@@ -12,6 +13,7 @@ export default function TaskList({
   updateTask,
   deleteTask,
   filterCategory,
+  categories,
 }: TaskListProps) {
   const getTasks = () => {
     if (filterCategory !== "All") {
@@ -26,7 +28,12 @@ export default function TaskList({
   const DisplayTasks = () =>
     getTasks().map((t: TaskType) => (
       <Fragment key={t.id}>
-        <Task task={t} updateTask={updateTask} deleteTask={deleteTask} />
+        <Task
+          task={t}
+          updateTask={updateTask}
+          deleteTask={deleteTask}
+          categories={categories}
+        />
       </Fragment>
     ));
 
