@@ -15,8 +15,8 @@ Your task is to create a to-do list application using React with hooks and funct
 
 ### Optional (if time permits):
 
-- add a dropdown to select category for each todo
-- show categories in the todo list
+- add a dropdown to select category for each todo ✅
+- show categories in the todo list ✅
 - filter by categories ✅
 
 ---
